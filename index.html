@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>도전, 2분! 기초 한자 90자 스피드 퀴즈</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- Google Fonts: Gowun Batang for Hanja elegance & Pretendard/Inter for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@700&family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    
+    .hanja-font {
+      font-family: 'Gowun Batang', 'Hanja', serif;
+    }
+
+    /* Bounce and dance animations for the mascot */
+    @keyframes joyful-dance {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+      }
+      25% {
+        transform: translateY(-22px) rotate(-6deg) scale(1.08);
+      }
+      50% {
+        transform: translateY(0) rotate(4deg) scale(1);
+      }
+      75% {
+        transform: translateY(-16px) rotate(6deg) scale(1.05);
+      }
+    }
+
+    @keyframes cheer-hands {
+      0%, 100% { transform: rotate(-10deg); }
+      50% { transform: rotate(20deg); }
+    }
+
+    .animate-joyful {
+      animation: joyful-dance 0.75s ease-in-out infinite;
+    }
+
+    .animate-cheer-left {
+      transform-origin: bottom right;
+      animation: cheer-hands 0.5s ease-in-out infinite alternate;
+    }
+
+    .animate-cheer-right {
+      transform-origin: bottom left;
+      animation: cheer-hands 0.5s ease-in-out infinite alternate-reverse;
+    }
+
+    /* Pulse glow for timer */
+    @keyframes glow-urgent {
+      0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.7)); }
+      50% { opacity: 0.8; filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.9)); }
+    }
+    .timer-urgent {
+      animation: glow-urgent 0.8s infinite;
+    }
+
+    /* Custom scrollbar for modal */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-amber-50 via-stone-100 to-amber-100 min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden">
+
+  <!-- Top Navigation Header -->
+  <header class="w-full max-w-2xl mx-auto pt-3 px-4 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-600 text-white font-black text-sm shadow-md">
+        漢
+      </span>
+      <h1 class="text-xl md:text-2xl font-black tracking-tight text-slate-800">
+        도전, <span class="text-red-600">2분!</span> <span class="text-sm md:text-base font-semibold text-slate-500">기초 90자</span>
+      </h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="soundToggleBtn" class="p-2 rounded-xl bg-white/80 hover:bg-white text-slate-700 shadow-sm border border-stone-200 transition active:scale-95" title="효과음 켜기/끄기">
+        <svg id="soundIconOn" class="w-5 h-5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.829 1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+        <svg id="soundIconOff" class="w-5 h-5 text-slate-400 hidden" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+      <button id="openAllListBtn" class="px-3 py-1.5 rounded-xl bg-white hover:bg-stone-50 border border-stone-200 text-xs font-bold text-slate-700 shadow-sm transition active:scale-95 flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
+        전체 90자
+      </button>
+    </div>
+  </header>
+
+  <main class="w-full max-w-md mx-auto px-4 py-2 flex-1 flex flex-col justify-center">
+    
+    <!-- Top Status / Timer Card -->
+    <div class="bg-white/90 backdrop-blur rounded-2xl p-3.5 shadow-sm border border-stone-200/80 mb-3 flex items-center justify-between">
+      <!-- Progress counter -->
+      <div class="flex flex-col">
+        <span class="text-[11px] font-bold tracking-wide text-slate-400 uppercase">진행 상황</span>
+        <div class="flex items-baseline space-x-1">
+          <span id="currentCardIndex" class="text-2xl font-black text-red-600">0</span>
+          <span class="text-sm font-semibold text-slate-400">/ 90</span>
+        </div>
+      </div>
+
+      <!-- Realtime Timer Display -->
+      <div class="flex flex-col items-center">
+        <span class="text-[11px] font-bold tracking-wide text-slate-400 uppercase">남은 목표 (2분)</span>
+        <div id="timerDisplay" class="font-mono text-2xl font-black tracking-wider text-slate-800">
+          02:00.0
+        </div>
+      </div>
+
+      <!-- Target/Elapsed switch or Stop button -->
+      <div class="flex flex-col items-end">
+        <button id="headerStopBtn" class="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs transition active:scale-95 disabled:opacity-40 disabled:pointer-events-none" disabled>
+          ■ 스탑
+        </button>
+        <span id="speedStat" class="text-[10px] font-semibold text-slate-400 mt-1">대기중</span>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden mb-3.5">
+      <div id="progressBar" class="bg-gradient-to-r from-amber-500 to-red-500 h-full w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- Flashcard Display Area (Click card to proceed directly) -->
+    <div class="relative w-full aspect-[4/4.6] max-h-[440px] flex flex-col">
+      <div id="cardTouchArea" class="relative flex-1 bg-white rounded-3xl shadow-xl border-4 border-stone-200/90 flex flex-col items-center justify-between p-6 transition-all duration-200 active:scale-[0.985] cursor-pointer hover:border-amber-300 group overflow-hidden">
+        
+        <!-- Top Hint Badge / Number -->
+        <div class="w-full flex justify-between items-center text-xs">
+          <span id="cardOrderTag" class="px-2.5 py-1 rounded-full bg-stone-100 text-stone-500 font-semibold">
+            카드 01
+          </span>
+          <span class="text-stone-400 font-medium flex items-center gap-1 group-hover:text-amber-600 transition">
+            <span>화면 터치 시 다음</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </span>
+        </div>
+
+        <!-- Hanja Character (Large Center) -->
+        <div class="flex-1 flex items-center justify-center my-2">
+          <span id="hanjaChar" class="hanja-font text-[115px] sm:text-[135px] font-bold text-stone-900 select-none tracking-normal leading-none drop-shadow-sm transition-transform duration-150">
+            一
+          </span>
+        </div>
+
+        <!-- Meaning & Sound (Hidden by default, revealable) -->
+        <div class="w-full text-center min-h-[64px] flex flex-col items-center justify-center">
+          <div id="meanSoundContainer" class="opacity-0 translate-y-2 transition-all duration-200">
+            <span id="meanSoundText" class="text-2xl sm:text-3xl font-extrabold text-red-600 tracking-wide">
+              하나 (일)
+            </span>
+          </div>
+          <div id="hiddenPlaceholder" class="text-xs sm:text-sm font-semibold text-stone-400 bg-stone-100/90 px-4 py-1.5 rounded-full border border-stone-200">
+            소리내어 음과 뜻을 말해보세요!
+          </div>
+        </div>
+
+        <!-- Card overlay shine effect -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/[0.02] to-transparent pointer-events-none"></div>
+      </div>
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="mt-4 grid grid-cols-4 gap-2.5">
+      <!-- Previous Button -->
+      <button id="prevBtn" class="col-span-1 py-3.5 rounded-2xl bg-white border border-stone-200 text-slate-600 font-bold text-sm shadow-sm active:scale-95 transition hover:bg-stone-50 disabled:opacity-40 disabled:pointer-events-none">
+        ◀ 이전
+      </button>
+
+      <!-- Toggle Sound/Meaning Button -->
+      <button id="revealBtn" class="col-span-1 py-3.5 rounded-2xl bg-amber-100/80 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs sm:text-sm shadow-sm active:scale-95 transition flex flex-col items-center justify-center leading-tight">
+        <span>음·뜻</span>
+        <span class="text-[11px] text-amber-700">확인</span>
+      </button>
+
+      <!-- Next Button (Primary Action) -->
+      <button id="nextBtn" class="col-span-2 py-3.5 rounded-2xl bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-extrabold text-base shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+        <span id="nextBtnText">다음 한자</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Bottom Quick Bar: Shuffle / Start Again -->
+    <div class="mt-3 flex justify-between items-center text-xs text-slate-500 px-1">
+      <button id="restartBtn" class="font-semibold text-slate-500 hover:text-red-600 transition flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+        카드 다시 섞기 & 리셋
+      </button>
+      <span class="font-medium">키보드: Space/→ (다음), ↑ (정답)</span>
+    </div>
+  </main>
+
+  <!-- Start Screen Overlay -->
+  <div id="startModal" class="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border-4 border-amber-400 animate-fadeIn">
+      <div class="w-20 h-20 mx-auto mb-4 bg-amber-100 rounded-2xl flex items-center justify-center shadow-inner">
+        <span class="hanja-font text-5xl font-black text-amber-700">漢</span>
+      </div>
+      <h2 class="text-2xl font-black text-slate-800 mb-1">도전, 2분 스피드 퀴즈!</h2>
+      <p class="text-sm text-slate-500 font-medium mb-5">
+        엄선된 기초 한자 <strong class="text-red-600">90자</strong>를 무작위로 넘기며 
+        음과 뜻을 2분(120초) 안에 모두 완주해보세요!
+      </p>
+
+      <div class="bg-stone-50 rounded-2xl p-4 mb-5 text-left text-xs text-stone-600 space-y-2 border border-stone-200">
+        <div class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-red-100 text-red-600 font-bold flex items-center justify-center text-[10px]">1</span>
+          <span>카드를 <strong>터치</strong>하면 즉시 다음 한자로 넘어갑니다.</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 font-bold flex items-center justify-center text-[10px]">2</span>
+          <span>기억 안 날 땐 <strong>[음·뜻 확인]</strong> 버튼을 누르세요.</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-[10px]">3</span>
+          <span>2분 내에 성공하면 신나는 축하 파티가 열립니다! 🎉</span>
+        </div>
+      </div>
+
+      <button id="gameStartBtn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-black text-lg shadow-lg hover:shadow-red-500/25 active:scale-95 transition transform hover:-translate-y-0.5">
+        도전 시작하기 (타이머 시작!)
+      </button>
+    </div>
+  </div>
+
+  <!-- Result & Celebration Modal -->
+  <div id="resultModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl relative overflow-hidden border-4 border-amber-300">
+      
+      <!-- Top Decorative Banner -->
+      <div id="resultBadge" class="inline-block px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase mb-3 bg-red-100 text-red-600">
+        MISSION COMPLETE
+      </div>
+
+      <!-- Result Heading -->
+      <h3 id="resultTitle" class="text-2xl sm:text-3xl font-black text-slate-800 mb-1">
+        2분 완주 대성공! 🎉
+      </h3>
+      <p id="resultSub" class="text-xs sm:text-sm text-slate-500 font-medium mb-4">
+        기초 한자 90자를 빛의 속도로 마스터했습니다!
+      </p>
+
+      <!-- Animated Mascot SVG Illustration -->
+      <div class="w-full py-2 flex justify-center items-center">
+        <!-- Cute Excited Scholar Bunny / Lion SVG -->
+        <div id="mascotContainer" class="w-36 h-36 relative animate-joyful">
+          <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md">
+            <!-- Background Glow -->
+            <circle cx="100" cy="100" r="85" fill="#FEF3C7"/>
+            
+            <!-- Confetti sparkles in SVG -->
+            <circle cx="40" cy="40" r="4" fill="#EF4444" />
+            <circle cx="160" cy="35" r="5" fill="#F59E0B" />
+            <polygon points="170,80 176,86 168,90" fill="#3B82F6" />
+            <polygon points="25,120 32,125 24,130" fill="#10B981" />
+
+            <!-- Ears -->
+            <ellipse cx="70" cy="45" rx="14" ry="32" fill="#FBBF24" transform="rotate(-12 70 45)" />
+            <ellipse cx="70" cy="45" rx="8" ry="22" fill="#FDE68A" transform="rotate(-12 70 45)" />
+            <ellipse cx="130" cy="45" rx="14" ry="32" fill="#FBBF24" transform="rotate(12 130 45)" />
+            <ellipse cx="130" cy="45" rx="8" ry="22" fill="#FDE68A" transform="rotate(12 130 45)" />
+
+            <!-- Body -->
+            <ellipse cx="100" cy="140" rx="42" ry="38" fill="#F59E0B" />
+            <ellipse cx="100" cy="145" rx="28" ry="25" fill="#FEF3C7" />
+
+            <!-- Cheering Arms -->
+            <!-- Left arm raised high with flag -->
+            <g class="animate-cheer-left">
+              <path d="M62 130 Q35 95 35 80" stroke="#F59E0B" stroke-width="16" stroke-linecap="round" fill="none"/>
+              <circle cx="35" cy="78" r="10" fill="#FBBF24" />
+              <!-- mini party popper -->
+              <polygon points="35,78 15,60 30,50" fill="#EF4444"/>
+            </g>
+            <!-- Right arm raised high -->
+            <g class="animate-cheer-right">
+              <path d="M138 130 Q165 95 165 80" stroke="#F59E0B" stroke-width="16" stroke-linecap="round" fill="none"/>
+              <circle cx="165" cy="78" r="10" fill="#FBBF24" />
+              <polygon points="165,78 185,60 170,50" fill="#3B82F6"/>
+            </g>
+
+            <!-- Head -->
+            <circle cx="100" cy="100" r="46" fill="#FBBF24" />
+
+            <!-- Cute Face -->
+            <!-- Cheerful Eyes (happy arcs) -->
+            <path d="M78 96 Q88 84 96 96" stroke="#451A03" stroke-width="4.5" stroke-linecap="round" fill="none" />
+            <path d="M104 96 Q112 84 122 96" stroke="#451A03" stroke-width="4.5" stroke-linecap="round" fill="none" />
+
+            <!-- Rosy Cheeks -->
+            <ellipse cx="74" cy="106" rx="8" ry="5" fill="#F87171" opacity="0.85" />
+            <ellipse cx="126" cy="106" rx="8" ry="5" fill="#F87171" opacity="0.85" />
+
+            <!-- Nose & Wide Happy Mouth -->
+            <ellipse cx="100" cy="103" rx="4" ry="3" fill="#78350F" />
+            <path d="M88 108 Q100 128 112 108 Z" fill="#DC2626" />
+            <path d="M94 118 Q100 125 106 118 Z" fill="#FCA5A5" />
+
+            <!-- Traditional Scholar Hat (어사화 모자) -->
+            <path d="M72 65 L128 65 L120 50 L80 50 Z" fill="#1E293B" />
+            <rect x="65" y="63" width="70" height="7" rx="3.5" fill="#0F172A" />
+            <circle cx="100" cy="50" r="6" fill="#DC2626" />
+            <!-- Hat ribbons -->
+            <path d="M100 50 Q135 45 150 25" stroke="#DC2626" stroke-width="3" fill="none"/>
+            <circle cx="150" cy="25" r="4" fill="#FBBF24"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Final Score Summary Card -->
+      <div class="bg-stone-100 rounded-2xl p-4 my-4 space-y-2 border border-stone-200">
+        <div class="flex justify-between items-center text-xs text-slate-500 font-bold">
+          <span>기록된 소요 시간</span>
+          <span id="finalTimeText" class="text-xl font-black font-mono text-slate-900">01:48.3</span>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 font-bold">
+          <span>완주 카드 수</span>
+          <span id="finalCardCount" class="text-sm font-black text-red-600">90 / 90자</span>
+        </div>
+        <div class="flex justify-between items-center text-xs text-slate-500 font-bold">
+          <span>한자당 평균 속도</span>
+          <span id="finalAverageSpeed" class="text-sm font-black text-amber-700">1.2초 / 자</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2">
+        <button id="retryBtn" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-sm shadow-md active:scale-95 transition">
+          다시 도전하기 🔥
+        </button>
+        <button id="viewListFromResultBtn" class="px-4 py-3.5 rounded-xl bg-stone-200 text-stone-700 font-bold text-sm hover:bg-stone-300 active:scale-95 transition">
+          전체 90자
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 90 All Hanja Reference Modal -->
+  <div id="allListModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <div>
+          <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+            <span>기초 한자 90자 전체 일람표</span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 text-red-600">10행 × 9열</span>
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">교재에 수록된 90자의 한자와 뜻·음을 모두 확인하고 복습하세요.</p>
+        </div>
+        <button id="closeAllListBtn" class="w-9 h-9 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-700 flex items-center justify-center font-bold text-lg transition active:scale-90">
+          ✕
+        </button>
+      </div>
+
+      <!-- Filter / Search Quick input -->
+      <div class="px-4 py-2 bg-stone-100/70 border-b border-stone-200 flex items-center gap-2">
+        <svg class="w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input id="hanjaSearchInput" type="text" placeholder="한자 또는 음/뜻 검색 (예: 龍, 물, 화, 목...)" class="w-full bg-transparent text-xs sm:text-sm font-medium focus:outline-none placeholder:text-stone-400">
+        <span id="searchCount" class="text-[11px] text-stone-400 font-bold whitespace-nowrap">90자</span>
+      </div>
+
+      <!-- Grid Content -->
+      <div id="allHanjaGrid" class="flex-1 overflow-y-auto p-3 sm:p-4 grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 gap-2 custom-scrollbar">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3 bg-stone-50 border-t border-stone-200 flex justify-between items-center text-xs text-stone-500">
+        <span>* 카드를 클릭하면 해당 한자의 음을 크게 들려줍니다.</span>
+        <button id="closeAllListBottomBtn" class="px-4 py-2 rounded-xl bg-slate-800 text-white font-bold hover:bg-slate-700 transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-2xl mx-auto py-2 text-center text-[11px] text-stone-400">
+    기초 한자 90자 스피드 퀴즈 &bull; 목표 시간: 120초 (2분)
+  </footer>
+
+  <script>
+    /* 
+      Extracted exactly from the 10x9 textbook table provided:
+      Row 1: 一(일), 乙(을), 二(이), 人(인), 入(입), 八(팔), 刀(도), 力(력), 十(십)
+      Row 2: 口(구), 土(토), 士(사), 夕(석), 大(대), 女(녀), 子(자), 小(소), 山(산)
+      Row 3: 工(공), 己(기), 弓(궁), 心(심), 手(수), 斤(근), 方(방), 日(일), 月(월)
+      Row 4: 木(목), 毛(모), 水(수), 火(화), 父(부), 牛(우), 犬(견), 生(생), 用(용)
+      Row 5: 田(전), 白(백), 目(목), 石(석), 示(시), 禾(화), 立(립), 竹(죽), 米(미)
+      Row 6: 糸(사), 羊(양), 羽(우), 耳(이), 肉(육), 臣(신), 自(자), 色(색), 虫(충)
+      Row 7: 血(혈), 行(행), 衣(의), 見(견), 角(각), 言(언), 豆(두), 貝(패), 足(족)
+      Row 8: 身(신), 車(차,거), 辛(신), 里(리), 金(금), 長(장), 門(문), 隹(추), 雨(우)
+      Row 9: 靑(청), 非(비), 面(면), 音(음), 風(풍), 飛(비), 食(식), 首(수), 馬(마)
+      Row 10: 骨(골), 高(고), 魚(어), 鳥(조), 黃(황), 黑(흑), 鼻(비), 齒(치), 龍(룡)
+    */
+    const HANJA_DATA = [
+      // Row 1
+      { hanja: "一", mean: "하나", sound: "일", display: "하나(일)" },
+      { hanja: "乙", mean: "새", sound: "을", display: "새(을)" },
+      { hanja: "二", mean: "둘", sound: "이", display: "둘(이)" },
+      { hanja: "人", mean: "사람", sound: "인", display: "사람(인)" },
+      { hanja: "入", mean: "들", sound: "입", display: "들(입)" },
+      { hanja: "八", mean: "여덟", sound: "팔", display: "여덟(팔)" },
+      { hanja: "刀", mean: "칼", sound: "도", display: "칼(도)" },
+      { hanja: "力", mean: "힘", sound: "력", display: "힘(력)" },
+      { hanja: "十", mean: "열", sound: "십", display: "열(십)" },
+
+      // Row 2
+      { hanja: "口", mean: "입", sound: "구", display: "입(구)" },
+      { hanja: "土", mean: "흙", sound: "토", display: "흙(토)" },
+      { hanja: "士", mean: "선비", sound: "사", display: "선비(사)" },
+      { hanja: "夕", mean: "저녁", sound: "석", display: "저녁(석)" },
+      { hanja: "大", mean: "큰", sound: "대", display: "큰(대)" },
+      { hanja: "女", mean: "여자", sound: "녀", display: "여자(녀)" },
+      { hanja: "子", mean: "아이", sound: "자", display: "아이(자)" },
+      { hanja: "小", mean: "작을", sound: "소", display: "작을(소)" },
+      { hanja: "山", mean: "산", sound: "산", display: "산(산)" },
+
+      // Row 3
+      { hanja: "工", mean: "장인", sound: "공", display: "장인(공)" },
+      { hanja: "己", mean: "몸", sound: "기", display: "몸(기)" },
+      { hanja: "弓", mean: "활", sound: "궁", display: "활(궁)" },
+      { hanja: "心", mean: "마음", sound: "심", display: "마음(심)" },
+      { hanja: "手", mean: "손", sound: "수", display: "손(수)" },
+      { hanja: "斤", mean: "도끼", sound: "근", display: "도끼(근)" },
+      { hanja: "方", mean: "모", sound: "방", display: "모(방)" },
+      { hanja: "日", mean: "해", sound: "일", display: "해(일)" },
+      { hanja: "月", mean: "달", sound: "월", display: "달(월)" },
+
+      // Row 4
+      { hanja: "木", mean: "나무", sound: "목", display: "나무(목)" },
+      { hanja: "毛", mean: "털", sound: "모", display: "털(모)" },
+      { hanja: "水", mean: "물", sound: "수", display: "물(수)" },
+      { hanja: "火", mean: "불", sound: "화", display: "불(화)" },
+      { hanja: "父", mean: "아버지", sound: "부", display: "아버지(부)" },
+      { hanja: "牛", mean: "소", sound: "우", display: "소(우)" },
+      { hanja: "犬", mean: "개", sound: "견", display: "개(견)" },
+      { hanja: "生", mean: "날", sound: "생", display: "날(생)" },
+      { hanja: "用", mean: "쓸", sound: "용", display: "쓸(용)" },
+
+      // Row 5
+      { hanja: "田", mean: "밭", sound: "전", display: "밭(전)" },
+      { hanja: "白", mean: "흰", sound: "백", display: "흰(백)" },
+      { hanja: "目", mean: "눈", sound: "목", display: "눈(목)" },
+      { hanja: "石", mean: "돌", sound: "석", display: "돌(석)" },
+      { hanja: "示", mean: "보일", sound: "시", display: "보일(시)" },
+      { hanja: "禾", mean: "벼", sound: "화", display: "벼(화)" },
+      { hanja: "立", mean: "설", sound: "립", display: "설(립)" },
+      { hanja: "竹", mean: "대나무", sound: "죽", display: "대나무(죽)" },
+      { hanja: "米", mean: "쌀", sound: "미", display: "쌀(미)" },
+
+      // Row 6
+      { hanja: "糸", mean: "실", sound: "사", display: "실(사)" },
+      { hanja: "羊", mean: "양", sound: "양", display: "양(양)" },
+      { hanja: "羽", mean: "깃", sound: "우", display: "깃(우)" },
+      { hanja: "耳", mean: "귀", sound: "이", display: "귀(이)" },
+      { hanja: "肉", mean: "고기", sound: "육", display: "고기(육)" },
+      { hanja: "臣", mean: "신하", sound: "신", display: "신하(신)" },
+      { hanja: "自", mean: "스스로", sound: "자", display: "스스로(자)" },
+      { hanja: "色", mean: "빛", sound: "색", display: "빛(색)" },
+      { hanja: "虫", mean: "벌레", sound: "충", display: "벌레(충)" },
+
+      // Row 7
+      { hanja: "血", mean: "피", sound: "혈", display: "피(혈)" },
+      { hanja: "行", mean: "다닐", sound: "행", display: "다닐(행)" },
+      { hanja: "衣", mean: "옷", sound: "의", display: "옷(의)" },
+      { hanja: "見", mean: "볼", sound: "견", display: "볼(견)" },
+      { hanja: "角", mean: "뿔", sound: "각", display: "뿔(각)" },
+      { hanja: "言", mean: "말씀", sound: "언", display: "말씀(언)" },
+      { hanja: "豆", mean: "콩", sound: "두", display: "콩(두)" },
+      { hanja: "貝", mean: "조개", sound: "패", display: "조개(패)" },
+      { hanja: "足", mean: "발", sound: "족", display: "발(족)" },
+
+      // Row 8
+      { hanja: "身", mean: "몸", sound: "신", display: "몸(신)" },
+      { hanja: "車", mean: "수레", sound: "차,거", display: "수레(차, 거)" },
+      { hanja: "辛", mean: "매울", sound: "신", display: "매울(신)" },
+      { hanja: "里", mean: "마을", sound: "리", display: "마을(리)" },
+      { hanja: "金", mean: "쇠", sound: "금", display: "쇠(금)" },
+      { hanja: "長", mean: "길", sound: "장", display: "길(장)" },
+      { hanja: "門", mean: "문", sound: "문", display: "문(문)" },
+      { hanja: "隹", mean: "새", sound: "추", display: "새(추)" },
+      { hanja: "雨", mean: "비", sound: "우", display: "비(우)" },
+
+      // Row 9
+      { hanja: "靑", mean: "푸를", sound: "청", display: "푸를(청)" },
+      { hanja: "非", mean: "아닐", sound: "비", display: "아닐(비)" },
+      { hanja: "面", mean: "얼굴", sound: "면", display: "얼굴(면)" },
+      { hanja: "音", mean: "소리", sound: "음", display: "소리(음)" },
+      { hanja: "風", mean: "바람", sound: "풍", display: "바람(풍)" },
+      { hanja: "飛", mean: "날", sound: "비", display: "날(비)" },
+      { hanja: "食", mean: "먹을", sound: "식", display: "먹을(식)" },
+      { hanja: "首", mean: "머리", sound: "수", display: "머리(수)" },
+      { hanja: "馬", mean: "말", sound: "마", display: "말(마)" },
+
+      // Row 10
+      { hanja: "骨", mean: "뼈", sound: "골", display: "뼈(골)" },
+      { hanja: "高", mean: "높을", sound: "고", display: "높을(고)" },
+      { hanja: "魚", mean: "물고기", sound: "어", display: "물고기(어)" },
+      { hanja: "鳥", mean: "새", sound: "조", display: "새(조)" },
+      { hanja: "黃", mean: "누를", sound: "황", display: "누를(황)" },
+      { hanja: "黑", mean: "검을", sound: "흑", display: "검을(흑)" },
+      { hanja: "鼻", mean: "코", sound: "비", display: "코(비)" },
+      { hanja: "齒", mean: "이", sound: "치", display: "이(치)" },
+      { hanja: "龍", mean: "용", sound: "룡", display: "용(룡)" }
+    ];
+
+    // Built-in synthesized audio effects (Zero external dependencies)
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playPop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(450, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.09);
+        } catch(e) {}
+      }
+
+      playReveal() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const now = this.ctx.currentTime;
+          const notes = [523.25, 659.25]; // C5, E5
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.05);
+
+            gain.gain.setValueAtTime(0.15, now + i * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.05 + 0.15);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(now + i * 0.05);
+            osc.stop(now + i * 0.05 + 0.16);
+          });
+        } catch(e) {}
+      }
+
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          // Melodic victory fanfare notes: C5, E5, G5, C6
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          const durations = [0.12, 0.12, 0.14, 0.45];
+          let time = this.ctx.currentTime + 0.05;
+
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, time);
+
+            const dur = durations[idx];
+            gain.gain.setValueAtTime(0.25, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+
+            osc.start(time);
+            osc.stop(time + dur + 0.02);
+            time += dur;
+          });
+        } catch(e) {}
+      }
+    }
+
+    const sfx = new SoundFX();
+
+    // App State
+    let deck = [];
+    let currentIndex = 0;
+    let isRevealed = false;
+    let timerInterval = null;
+    let startTime = null;
+    let elapsedTime = 0; // in milliseconds
+    let isRunning = false;
+    const TARGET_TIME_MS = 120 * 1000; // 2 minutes (120 seconds)
+
+    // DOM Elements
+    const cardTouchArea = document.getElementById('cardTouchArea');
+    const hanjaChar = document.getElementById('hanjaChar');
+    const meanSoundContainer = document.getElementById('meanSoundContainer');
+    const meanSoundText = document.getElementById('meanSoundText');
+    const hiddenPlaceholder = document.getElementById('hiddenPlaceholder');
+    const cardOrderTag = document.getElementById('cardOrderTag');
+    const currentCardIndex = document.getElementById('currentCardIndex');
+    const progressBar = document.getElementById('progressBar');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const speedStat = document.getElementById('speedStat');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const nextBtnText = document.getElementById('nextBtnText');
+    const revealBtn = document.getElementById('revealBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const headerStopBtn = document.getElementById('headerStopBtn');
+    const startModal = document.getElementById('startModal');
+    const gameStartBtn = document.getElementById('gameStartBtn');
+    const resultModal = document.getElementById('resultModal');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultSub = document.getElementById('resultSub');
+    const resultBadge = document.getElementById('resultBadge');
+    const finalTimeText = document.getElementById('finalTimeText');
+    const finalCardCount = document.getElementById('finalCardCount');
+    const finalAverageSpeed = document.getElementById('finalAverageSpeed');
+    const retryBtn = document.getElementById('retryBtn');
+    const viewListFromResultBtn = document.getElementById('viewListFromResultBtn');
+    const allListModal = document.getElementById('allListModal');
+    const openAllListBtn = document.getElementById('openAllListBtn');
+    const closeAllListBtn = document.getElementById('closeAllListBtn');
+    const closeAllListBottomBtn = document.getElementById('closeAllListBottomBtn');
+    const allHanjaGrid = document.getElementById('allHanjaGrid');
+    const hanjaSearchInput = document.getElementById('hanjaSearchInput');
+    const searchCount = document.getElementById('searchCount');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIconOn = document.getElementById('soundIconOn');
+    const soundIconOff = document.getElementById('soundIconOff');
+
+    // Fisher-Yates array shuffle for random card ordering
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Format millisecond duration into MM:SS.S
+    function formatTime(ms) {
+      const totalSeconds = Math.max(0, ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      const tenths = Math.floor((ms % 1000) / 100);
+      return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${tenths}`;
+    }
+
+    function updateCardUI() {
+      if (currentIndex >= deck.length) return;
+      const current = deck[currentIndex];
+
+      // Update Hanja text with subtle pop animation
+      hanjaChar.style.transform = 'scale(0.85)';
+      setTimeout(() => {
+        hanjaChar.textContent = current.hanja;
+        hanjaChar.style.transform = 'scale(1)';
+      }, 50);
+
+      // Mean & Sound text
+      meanSoundText.textContent = current.display;
+
+      // Status indicator
+      cardOrderTag.textContent = `카드 ${currentIndex + 1} / ${deck.length}`;
+      currentCardIndex.textContent = currentIndex + 1;
+
+      // Progress bar percentage
+      const percent = ((currentIndex + 1) / deck.length) * 100;
+      progressBar.style.width = `${percent}%`;
+
+      // Hide reveal state on card transition
+      hideAnswer();
+
+      // Control buttons state
+      prevBtn.disabled = (currentIndex === 0);
+      if (currentIndex === deck.length - 1) {
+        nextBtnText.textContent = '완료 & 스탑';
+      } else {
+        nextBtnText.textContent = '다음 한자';
+      }
+
+      // Update pace
+      if (elapsedTime > 0 && currentIndex > 0) {
+        const secPerCard = (elapsedTime / 1000 / (currentIndex + 1)).toFixed(1);
+        speedStat.textContent = `개당 ${secPerCard}초`;
+      }
+    }
+
+    function revealAnswer() {
+      if (isRevealed) return;
+      isRevealed = true;
+      meanSoundContainer.classList.remove('opacity-0', 'translate-y-2');
+      meanSoundContainer.classList.add('opacity-100', 'translate-y-0');
+      hiddenPlaceholder.classList.add('hidden');
+      sfx.playReveal();
+    }
+
+    function hideAnswer() {
+      isRevealed = false;
+      meanSoundContainer.classList.add('opacity-0', 'translate-y-2');
+      meanSoundContainer.classList.remove('opacity-100', 'translate-y-0');
+      hiddenPlaceholder.classList.remove('hidden');
+    }
+
+    function toggleAnswer() {
+      if (isRevealed) {
+        hideAnswer();
+      } else {
+        revealAnswer();
+      }
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      isRunning = true;
+      startTime = performance.now() - elapsedTime;
+      headerStopBtn.disabled = false;
+
+      timerInterval = setInterval(() => {
+        elapsedTime = performance.now() - startTime;
+        
+        // Show remaining target time (Counting down from 02:00.0)
+        const remaining = TARGET_TIME_MS - elapsedTime;
+        if (remaining > 0) {
+          timerDisplay.textContent = formatTime(remaining);
+          timerDisplay.classList.remove('text-red-600', 'timer-urgent');
+        } else {
+          // Over 2 minutes: Show elapsed in urgent red
+          const over = elapsedTime - TARGET_TIME_MS;
+          timerDisplay.textContent = `+${formatTime(over)}`;
+          timerDisplay.classList.add('text-red-600', 'timer-urgent');
+        }
+      }, 90);
+    }
+
+    function stopTimer() {
+      if (!isRunning) return;
+      isRunning = false;
+      clearInterval(timerInterval);
+      timerInterval = null;
+      headerStopBtn.disabled = true;
+    }
+
+    function goNext() {
+      sfx.playPop();
+
+      if (currentIndex < deck.length - 1) {
+        currentIndex++;
+        updateCardUI();
+      } else {
+        // Completed all 90 cards!
+        finishQuiz();
+      }
+    }
+
+    function goPrev() {
+      if (currentIndex > 0) {
+        sfx.playPop();
+        currentIndex--;
+        updateCardUI();
+      }
+    }
+
+    function finishQuiz() {
+      stopTimer();
+
+      const finalMs = elapsedTime;
+      const finalSec = finalMs / 1000;
+      const isSuccessWithin2Min = finalMs <= TARGET_TIME_MS;
+      const avgSec = (finalSec / deck.length).toFixed(2);
+
+      finalTimeText.textContent = formatTime(finalMs);
+      finalCardCount.textContent = `${currentIndex + 1} / ${deck.length}자`;
+      finalAverageSpeed.textContent = `${avgSec}초 / 자`;
+
+      if (isSuccessWithin2Min) {
+        // Successful within 2 minutes! Fire celebration & happy mascot
+        resultBadge.textContent = '★ 2분 돌파 대성공! ★';
+        resultBadge.className = 'inline-block px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase mb-3 bg-amber-100 text-amber-800 border border-amber-300';
+        resultTitle.textContent = '축하합니다! 완주 성공! 🎉';
+        resultSub.textContent = `목표 2분보다 ${formatTime(TARGET_TIME_MS - finalMs)} 일찍 완주했습니다!`;
+        
+        sfx.playFanfare();
+        triggerConfettiStorm();
+      } else {
+        // Exceeded 2 minutes: Warm encouragement
+        resultBadge.textContent = '완주 완료! 참 잘했어요 👍';
+        resultBadge.className = 'inline-block px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase mb-3 bg-stone-200 text-stone-700';
+        resultTitle.textContent = '90자 끝까지 완주!';
+        resultSub.textContent = `2분을 조금 넘겼지만 대단해요! 다시 도전해서 2분 벽을 깨보세요!`;
+      }
+
+      resultModal.classList.remove('hidden');
+    }
+
+    // High energy confetti blast function
+    function triggerConfettiStorm() {
+      if (typeof confetti !== 'function') return;
+
+      const duration = 2.8 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 70, zIndex: 9999 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 55 * (timeLeft / duration);
+        confetti(Object.assign({}, defaults, { 
+          particleCount, 
+          origin: { x: randomInRange(0.15, 0.35), y: Math.random() - 0.2 },
+          colors: ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#EC4899']
+        }));
+        confetti(Object.assign({}, defaults, { 
+          particleCount, 
+          origin: { x: randomInRange(0.65, 0.85), y: Math.random() - 0.2 },
+          colors: ['#FBBF24', '#DC2626', '#6366F1', '#14B8A6']
+        }));
+      }, 250);
+    }
+
+    function resetAndStart() {
+      deck = shuffleArray(HANJA_DATA);
+      currentIndex = 0;
+      elapsedTime = 0;
+      stopTimer();
+      timerDisplay.textContent = '02:00.0';
+      timerDisplay.classList.remove('text-red-600', 'timer-urgent');
+      speedStat.textContent = '진행 중';
+      resultModal.classList.add('hidden');
+      updateCardUI();
+      startTimer();
+    }
+
+    function buildAllHanjaTable(filter = '') {
+      allHanjaGrid.innerHTML = '';
+      const query = filter.trim().toLowerCase();
+
+      let matchedCount = 0;
+
+      HANJA_DATA.forEach((item, index) => {
+        const matches = !query || 
+          item.hanja.includes(query) || 
+          item.sound.toLowerCase().includes(query) || 
+          item.mean.toLowerCase().includes(query) ||
+          item.display.toLowerCase().includes(query);
+
+        if (matches) {
+          matchedCount++;
+          const card = document.createElement('div');
+          card.className = 'bg-white rounded-2xl p-2.5 border border-stone-200 shadow-sm flex flex-col items-center justify-center text-center hover:border-amber-400 hover:shadow-md transition active:scale-95 cursor-pointer';
+          
+          card.innerHTML = `
+            <span class="text-[10px] font-bold text-stone-300 self-start">#${index + 1}</span>
+            <span class="hanja-font text-3xl font-bold text-slate-800 my-1">${item.hanja}</span>
+            <span class="text-[11px] font-extrabold text-red-600">${item.mean}</span>
+            <span class="text-[11px] font-bold text-slate-600">(${item.sound})</span>
+          `;
+
+          // Quick pronunciation read on click
+          card.addEventListener('click', () => {
+            sfx.playPop();
+            if ('speechSynthesis' in window) {
+              const utter = new SpeechSynthesisUtterance(`${item.mean} ${item.sound}`);
+              utter.lang = 'ko-KR';
+              utter.rate = 1.0;
+              window.speechSynthesis.speak(utter);
+            }
+          });
+
+          allHanjaGrid.appendChild(card);
+        }
+      });
+
+      searchCount.textContent = `${matchedCount} / 90자`;
+    }
+
+    // Touch card directly to move next
+    cardTouchArea.addEventListener('click', (e) => {
+      // Prevent double trigger if clicked specifically on toggle button inside
+      goNext();
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goNext();
+    });
+
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goPrev();
+    });
+
+    revealBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleAnswer();
+    });
+
+    headerStopBtn.addEventListener('click', () => {
+      finishQuiz();
+    });
+
+    restartBtn.addEventListener('click', () => {
+      resetAndStart();
+    });
+
+    gameStartBtn.addEventListener('click', () => {
+      sfx.init();
+      startModal.classList.add('hidden');
+      resetAndStart();
+    });
+
+    retryBtn.addEventListener('click', () => {
+      resetAndStart();
+    });
+
+    viewListFromResultBtn.addEventListener('click', () => {
+      resultModal.classList.add('hidden');
+      buildAllHanjaTable();
+      allListModal.classList.remove('hidden');
+    });
+
+    // Modal open/close
+    openAllListBtn.addEventListener('click', () => {
+      buildAllHanjaTable();
+      allListModal.classList.remove('hidden');
+    });
+
+    closeAllListBtn.addEventListener('click', () => {
+      allListModal.classList.add('hidden');
+    });
+
+    closeAllListBottomBtn.addEventListener('click', () => {
+      allListModal.classList.add('hidden');
+    });
+
+    // Live search filter in modal
+    hanjaSearchInput.addEventListener('input', (e) => {
+      buildAllHanjaTable(e.target.value);
+    });
+
+    // Sound toggle
+    soundToggleBtn.addEventListener('click', () => {
+      sfx.enabled = !sfx.enabled;
+      if (sfx.enabled) {
+        soundIconOn.classList.remove('hidden');
+        soundIconOff.classList.add('hidden');
+        sfx.playPop();
+      } else {
+        soundIconOn.classList.add('hidden');
+        soundIconOff.classList.remove('hidden');
+      }
+    });
+
+    // Keyboard navigation (Spacebar / Right arrow for next, Up for reveal)
+    window.addEventListener('keydown', (e) => {
+      // Ignore when typing inside search input
+      if (document.activeElement === hanjaSearchInput) return;
+
+      if (e.code === 'Space' || e.code === 'ArrowRight') {
+        e.preventDefault();
+        if (startModal.classList.contains('hidden') && resultModal.classList.contains('hidden') && allListModal.classList.contains('hidden')) {
+          goNext();
+        }
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.code === 'ArrowUp' || e.code === 'Enter') {
+        e.preventDefault();
+        toggleAnswer();
+      }
+    });
+
+    window.onload = function() {
+      // Pre-populate reference table
+      buildAllHanjaTable();
+      // Prepare initial preview card behind modal
+      deck = [...HANJA_DATA];
+      updateCardUI();
+    };
+  </script>
+</body>
+</html>
